@@ -75,5 +75,6 @@ int main() {
     }
     
     cout << format("You have {} Tickets.\n\nHave a magical day!\n", tickets);
+    cout << "added something";
     return 0;
 }
