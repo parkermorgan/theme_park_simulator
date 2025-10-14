@@ -9,6 +9,10 @@
 #include <list>
 using namespace std;
 
+
+// CLASS SECTION --------------------------------------------------------------------
+
+// Ride class to build different rides.
 class Ride {
 public:
     string name;
@@ -26,23 +30,64 @@ public:
     }
 };
 
+// Food class to build different food products.
+class Food {
+public:
+    string name;
+    int ticketAmount;
+    
+    Food(string foodName, int amount) {
+        name = foodName;
+        ticketAmount = amount;
+    }
+    
+    void Display() {
+        cout << format("{}: Tickets required: {}", name, ticketAmount);
+    }
+};
+
+// END CLASS SECTION ----------------------------------------------------------------
+
 int main() {
     int choice = 1;
     int tickets = 100;
     
-    list<Ride> rideList;
+    // Variables to measure user choice.
+    int foodCount = 0;
+    int choiceCount = 0;
     
+    // Establish lists.
+    list<Ride> rideList;
+    list<Food> foodList;
+    
+    // Add rides to list.
     rideList.push_back(Ride("Big Thunder", "Thrill", 15));
     rideList.push_back(Ride("Snow Whilte", "Dark Ride", 10));
     rideList.push_back(Ride("Jungle Cruise", "Water Ride", 5));
     
+    
+    // Add food to list.
+    foodList.push_back(Food("Churro", 3));
+    foodList.push_back(Food("Corn Dog", 5));
+    foodList.push_back(Food("Soda", 2));
+
+    
     cout << format("Welcome to the Theme Park Simulator!\n\n");
     
+    // Begin menu loop
     while (choice != 0 && tickets > 0) {
         cout << format("You have {} Tickets.\n\nSelect an option:\n", tickets);
         cout << "1. Ride Rides\n2. Buy Food\n3. Buy Merchandise\n0. Quit\nEnter your choice here: ";
         cin >> choice;
-
+        
+        // Check if the user has done enough options to allow them to eat food again.
+        if (choiceCount && foodCount == 3) {
+            foodCount = 0;
+            choiceCount = 0;
+            cout << "\n\nYour stomach feels much better now\n\n";
+        }
+        
+        // Ride section.
         if (choice == 1) {
             cout << "\nAvailable Rides:\n\n";
             int rideChoice;
@@ -51,6 +96,7 @@ int main() {
                 cout << format("{}. ", index);
                 r.display();
                 cout << "\n";
+                index += 1;
             }
             cout << "\nSelect a ride: ";
             cin >> rideChoice;
@@ -60,18 +106,48 @@ int main() {
                 advance(it, rideChoice - 1);
                 Ride& chosen = *it;
                 tickets -= chosen.ticketAmount;
+                
+                cout << "You rode " << chosen.name << "! It was fun.\n";
             }
             
-            
-            
-            
+            choiceCount ++;
+           
+        // Food section.
         } else if (choice == 2) {
-            cout << "\nYou chose to buy food!\n\n";
+            
+            // Check to see if the user has had too much to eat. If so, block option.
+            if (foodCount >= 3) {
+                cout << "You've had too much to eat! Try another option.\n";
+            } else {
+                cout << "\nAvailable Food:\n\n";
+                int foodChoice;
+                int index = 1;
+                for (Food& f : foodList) {
+                    cout << format("{}. ", index);
+                    f.Display();
+                    cout << "\n";
+                    index += 1;
+                }
+                cout << "\nYour stomach growls, time to get something to eat. Select an option: ";
+                cin >> foodChoice;
+                
+                if (foodChoice > 0 && foodChoice <= foodList.size()) {
+                    auto it = foodList.begin();
+                    advance(it, foodChoice - 1);
+                    Food& chosen = *it;
+                    tickets -= chosen.ticketAmount;
+                    
+                    cout << "You purchased a " << chosen.name << "! Great choice.\n";
+                }
+                
+                foodCount++;
+            }
         } else if (choice == 3) {
             cout << "\nYou chose to buy merchandise!\n\n";
         } else if (choice != 0) {
             cout << "\nInvalid input. Please try again.\n\n";
         }
+        
     }
     
     cout << format("You have {} Tickets.\n\nHave a magical day!\n", tickets);
