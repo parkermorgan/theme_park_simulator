@@ -7,10 +7,14 @@
 #include <iostream>
 #include <format>
 #include <list>
+#include <chrono>
+
 using namespace std;
+using namespace chrono;
 
 
 // CLASS SECTION --------------------------------------------------------------------
+// Future Improvements: Create unique class that can hold all types of objects, with built-in functions for displaying the list.
 
 // Ride class to build different rides.
 class Ride {
@@ -46,6 +50,22 @@ public:
     }
 };
 
+// Merchandise class.
+class Merch {
+public:
+    string name;
+    int ticketAmount;
+    
+    Merch(string merchName, int amount) {
+        name = merchName;
+        ticketAmount = amount;
+    }
+    
+    void Display() {
+        cout << format("{}: Price: {} tickets.", name, ticketAmount);
+    }
+};
+
 // END CLASS SECTION ----------------------------------------------------------------
 
 int main() {
@@ -55,10 +75,13 @@ int main() {
     // Variables to measure user choice.
     int foodCount = 0;
     int choiceCount = 0;
+    int thrillCount = 0;
+    int nonThrillCount = 0;
     
     // Establish lists.
     list<Ride> rideList;
     list<Food> foodList;
+    list<Merch> merchList;
     
     // Add rides to list.
     rideList.push_back(Ride("Big Thunder", "Thrill", 15));
@@ -71,6 +94,10 @@ int main() {
     foodList.push_back(Food("Corn Dog", 5));
     foodList.push_back(Food("Soda", 2));
 
+    // Add merch to list.
+    merchList.push_back(Merch("Spirit Jersey", 10));
+    merchList.push_back(Merch("Baseball Cap", 5));
+    merchList.push_back(Merch("Keychain", 2));
     
     cout << format("Welcome to the Theme Park Simulator!\n\n");
     
@@ -89,6 +116,7 @@ int main() {
         
         // Ride section.
         if (choice == 1) {
+            
             cout << "\nAvailable Rides:\n\n";
             int rideChoice;
             int index = 1;
@@ -100,14 +128,33 @@ int main() {
             }
             cout << "\nSelect a ride: ";
             cin >> rideChoice;
-            
+
             if (rideChoice > 0 && rideChoice <= rideList.size()) {
                 auto it = rideList.begin();
                 advance(it, rideChoice - 1);
                 Ride& chosen = *it;
-                tickets -= chosen.ticketAmount;
-                
-                cout << "You rode " << chosen.name << "! It was fun.\n";
+
+                // Check thrill ride restriction
+                if (chosen.type == "Thrill" && thrillCount >= 3) {
+                    cout << "You feel dizzy. Try 3 different rides before doing another thrill ride.\n";
+                } else {
+                    tickets -= chosen.ticketAmount;
+
+                    if (chosen.type == "Thrill") {
+                        thrillCount++;
+                        nonThrillCount = 0;
+                    } else {
+                        nonThrillCount++;
+        
+                        if (nonThrillCount >= 3) {
+                            thrillCount = 0;
+                            nonThrillCount = 0;
+                            cout << "Your stomach feels much better, you can go on more thrill rides!\n";
+                        }
+                    }
+
+                    cout << "You rode " << chosen.name << "! It was fun.\n";
+                }
             }
             
             choiceCount ++;
@@ -144,6 +191,25 @@ int main() {
             }
         } else if (choice == 3) {
             cout << "\nYou chose to buy merchandise!\n\n";
+            int merchChoice;
+            int index = 1;
+            for (Merch& m : merchList) {
+                cout << format("{}. ", index);
+                m.Display();
+                cout << "\n";
+                index += 1;
+            }
+            cout << "\nPurchase an item: ";
+            cin >> merchChoice;
+            
+            if (merchChoice > 0 && merchChoice < merchList.size()) {
+                auto it = merchList.begin();
+                advance(it, merchChoice - 1);
+                Merch& chosen = *it;
+                tickets -= chosen.ticketAmount;
+                
+                cout << "You purchased a " << chosen.name << "!\n";
+            }
         } else if (choice != 0) {
             cout << "\nInvalid input. Please try again.\n\n";
         }
