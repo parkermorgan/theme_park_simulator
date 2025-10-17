@@ -12,7 +12,6 @@
 using namespace std;
 using namespace chrono;
 
-
 // CLASS SECTION --------------------------------------------------------------------
 // Future Improvements: Create unique class that can hold all types of objects, with built-in functions for displaying the list.
 
@@ -66,9 +65,27 @@ public:
     }
 };
 
+
+
 // END CLASS SECTION ----------------------------------------------------------------
 
+// Final ticket cost calculator function.
+int calculateFinalCost(int baseCost, int discount) {
+    return max(0, baseCost - discount);
+}
+
 int main() {
+    // Establish day of the week for discount functionality.
+    auto today = floor<days>(system_clock::now());
+    weekday wd{today};
+
+    int dayNum = wd.c_encoding();
+    
+    // Add discount variables.
+    int thrillDiscount = 0;
+    int darkDiscount = 0;
+    int waterDiscount = 0;
+    
     int choice = 1;
     int tickets = 100;
     
@@ -85,7 +102,7 @@ int main() {
     
     // Add rides to list.
     rideList.push_back(Ride("Big Thunder", "Thrill", 15));
-    rideList.push_back(Ride("Snow Whilte", "Dark Ride", 10));
+    rideList.push_back(Ride("Snow White", "Dark Ride", 10));
     rideList.push_back(Ride("Jungle Cruise", "Water Ride", 5));
     
     
@@ -100,6 +117,36 @@ int main() {
     merchList.push_back(Merch("Keychain", 2));
     
     cout << format("Welcome to the Theme Park Simulator!\n\n");
+    cout << ("Here are the following discount days:\n"
+             "Mon/Wed/Fri: 3 tickets off of Dark Rides\n"
+             "Tue/Thur: 2 tickets off of Water Rides\n"
+             "Sat/Sun: 5 tickets off of Thrill Rides\n");
+    
+    string dayOfWeek;
+    switch (dayNum) {
+        case 1: dayOfWeek = "Monday"; break;
+        case 2: dayOfWeek = "Tuesday"; break;
+        case 3: dayOfWeek = "Wednesday"; break;
+        case 4: dayOfWeek = "Thursday"; break;
+        case 5: dayOfWeek = "Friday"; break;
+        case 6: dayOfWeek = "Saturday"; break;
+        case 7: dayOfWeek = "Sunday"; break;
+    }
+    
+    cout << format("\nToday is {}.\n", dayOfWeek);
+    
+    // Determine discount.
+    if (dayOfWeek == "Monday" || dayOfWeek == "Wednesday"|| dayOfWeek == "Friday") {
+        darkDiscount = 3;
+        cout << "\nAll Dark Rides are 3 tickets off of posted value.\n";
+    } else if (dayOfWeek == "Tuesday" || dayOfWeek == "Thursday") {
+        waterDiscount = 2;
+        cout << "\nAll Water Rides are 2 tickets off of posted value.\n";
+    } else {
+        thrillDiscount = 5;
+        cout << "\nAll Thrill RIdes are 5 tickets off of posted value.\n";
+    }
+    
     
     // Begin menu loop
     while (choice != 0 && tickets > 0) {
@@ -116,7 +163,6 @@ int main() {
         
         // Ride section.
         if (choice == 1) {
-            
             cout << "\nAvailable Rides:\n\n";
             int rideChoice;
             int index = 1;
@@ -138,7 +184,17 @@ int main() {
                 if (chosen.type == "Thrill" && thrillCount >= 3) {
                     cout << "You feel dizzy. Try 3 different rides before doing another thrill ride.\n";
                 } else {
-                    tickets -= chosen.ticketAmount;
+                    int finalDiscount = chosen.ticketAmount;
+                    
+                    if (chosen.type == "Thrill" && thrillDiscount > 0) {
+                        finalDiscount = calculateFinalCost(chosen.ticketAmount, thrillDiscount);
+                    } else if (chosen.type == "Dark Ride" && darkDiscount > 0) {
+                        finalDiscount = calculateFinalCost(chosen.ticketAmount, darkDiscount);
+                    } else if (chosen.type == "Water Ride" && waterDiscount > 0) {
+                        finalDiscount = calculateFinalCost(chosen.ticketAmount, waterDiscount);
+                    }
+                    
+                    tickets -= finalDiscount;
 
                     if (chosen.type == "Thrill") {
                         thrillCount++;
