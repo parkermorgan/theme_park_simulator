@@ -1,32 +1,31 @@
 # Overview
 
-{Important! Do not say in this section that this is college assignment. Talk about what you are trying to accomplish as a software engineer to further your learning.}
+This program is a interactive Theme Park Simulator designed to demostrate my knowledge of the C++ programming language in a fun, realistic way. 
 
-{Provide a description of the software that you wrote to demonstrate the C++ language.}
+In the simulator, the user is given 100 tickets and can choose to ride rides, buy food, or puchase merchandise, each with unique ticket costs and effects. The program dynamically adjusts ticket prices depending on the day of the week, giving discounts to certain ride types. It tracks player progress, gives restrictions based on actions completed, and maanges resources through conditionals and loops.
 
-{Describe your purpose for writing this software.}
+The program uses classes to represent rides, food items, and merchandise, each with a display method to display information about each object. It incorporates STL containers such as lists to store objects, and functions to calculate ticket discounts.
 
-{Provide a link to your YouTube demonstration. It should be a 4-5 minute demo of the software running and a walkthrough of the code. Focus should be on sharing what you learned about the language syntax.}
+My goal was to increase my skills as a Software Engineer by increasing my knowledge of object-oriented programming and adding another programming language to my skillset, showing others of my ability to learn multiple programming languages quickly and efficiently. 
 
-[Software Demo Video](http://youtube.link.goes.here)
+[Software Demo Video] https://www.youtube.com/watch?v=51aXHncK-gg
 
 # Development Environment
 
-{Describe the tools that you used to develop the software}
+My primary programming tool was Xcode, while source control was done through GitHub Desktop.
 
-{Describe the programming language that you used and any libraries.}
+The simulator was programmed in C++ with the following libraries: 'iostream', 'format', 'list', and 'chrono'.
 
 # Useful Websites
 
 {Make a list of websites that you found helpful in this project}
 
-- [Web Site Name](http://url.link.goes.here)
-- [Web Site Name](http://url.link.goes.here)
+- [W3Schools C++ Tutorial](https://www.w3schools.com/cpp/)
+- [Stack Overflow](https://www.w3schools.com/cpp/)
 
 # Future Work
 
-{Make a list of things that you need to fix, improve, and add in the future.}
-
-- Item 1
-- Item 2
-- Item 3
+- Combine classes into single 'Event' class that handles all values.
+- Implement functions to display items to reduce duplicate code.
+- Add save/load funtionality to retain user information.
+- Add funcationality to give the user more tickets through different actions.
