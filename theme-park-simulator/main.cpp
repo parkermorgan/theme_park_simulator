@@ -101,8 +101,8 @@ int main() {
     list<Merch> merchList;
     
     // Add rides to list.
-    rideList.push_back(Ride("Big Thunder", "Thrill", 15));
-    rideList.push_back(Ride("Snow White", "Dark Ride", 10));
+    rideList.push_back(Ride("Big Thunder", "Thrill", 12));
+    rideList.push_back(Ride("Snow White", "Dark Ride", 7));
     rideList.push_back(Ride("Jungle Cruise", "Water Ride", 5));
     
     
@@ -133,6 +133,7 @@ int main() {
         case 7: dayOfWeek = "Sunday"; break;
     }
     
+    
     cout << format("\nToday is {}.\n", dayOfWeek);
     
     // Determine discount.
@@ -155,10 +156,10 @@ int main() {
         cin >> choice;
         
         // Check if the user has done enough options to allow them to eat food again.
-        if (choiceCount && foodCount == 3) {
+        if (choiceCount >= 3 && foodCount >= 3) {
             foodCount = 0;
             choiceCount = 0;
-            cout << "\n\nYour stomach feels much better now\n\n";
+            cout << "\nYour stomach feels much better now\n";
         }
         
         // Ride section.
@@ -202,7 +203,7 @@ int main() {
                     } else {
                         nonThrillCount++;
         
-                        if (nonThrillCount >= 3) {
+                        if (nonThrillCount >= 3 && thrillCount == 3) {
                             thrillCount = 0;
                             nonThrillCount = 0;
                             cout << "Your stomach feels much better, you can go on more thrill rides!\n";
@@ -213,7 +214,11 @@ int main() {
                 }
             }
             
-            choiceCount ++;
+            if (foodCount == 0) {
+                choiceCount = 0;
+            } else {
+                choiceCount ++;
+            }
            
         // Food section.
         } else if (choice == 2) {
@@ -258,7 +263,7 @@ int main() {
             cout << "\nPurchase an item: ";
             cin >> merchChoice;
             
-            if (merchChoice > 0 && merchChoice < merchList.size()) {
+            if (merchChoice > 0 && merchChoice <= merchList.size()) {
                 auto it = merchList.begin();
                 advance(it, merchChoice - 1);
                 Merch& chosen = *it;
@@ -266,6 +271,14 @@ int main() {
                 
                 cout << "You purchased a " << chosen.name << "!\n";
             }
+            
+            if (foodCount == 0) {
+                choiceCount = 0;
+            } else {
+                choiceCount ++;
+            }
+           
+            
         } else if (choice != 0) {
             cout << "\nInvalid input. Please try again.\n\n";
         }
